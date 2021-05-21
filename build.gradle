@@ -1,0 +1,30 @@
+plugins {
+	id 'java-library'
+	id "io.freefair.lombok" version "6.0.0-m2"
+}
+
+group = 'com.github.ka.reactor.ringo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+
+ext.REACTOR_VERSION = '3.4.5'
+ext.SLF4J_VERSION = '1.7.30'
+
+dependencies {
+	implementation "io.projectreactor:reactor-core:${REACTOR_VERSION}"
+	implementation "org.slf4j:slf4j-api:${SLF4J_VERSION}"
+	testImplementation "io.projectreactor:reactor-test:${REACTOR_VERSION}"
+
+	testImplementation(platform('org.junit:junit-bom:5.7.1'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	implementation "org.slf4j:slf4j-simple:${SLF4J_VERSION}"
+}
+
+test {
+	useJUnitPlatform()
+}

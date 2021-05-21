@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-public class Utils {
+public class Monos {
     static <T> Mono<T> monoWithDelay(T result, Duration delay) {
         return Mono.create(s -> {
             sleep(delay.toMillis());

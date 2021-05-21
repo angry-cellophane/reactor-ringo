@@ -9,7 +9,7 @@ import reactor.test.StepVerifier;
 
 import java.time.Duration;
 
-public class BasicUseCasesTest {
+public class MonoBasicUseCasesTest {
 
     static Scheduler scheduler;
 
@@ -37,11 +37,29 @@ public class BasicUseCasesTest {
     @Test
     void testMonoReturnsTimeoutResult() {
         StepVerifier.create(
-                Monos.monoWithDelay(1, Duration.ofMillis(500))
-                        .timeout(Duration.ofMillis(200), Mono.just(2), scheduler)
+                Utils.monoWithDelay(1, Duration.ofMillis(500))
+                        .timeout(Duration.ofMillis(50), Mono.just(2), scheduler)
         )
         .expectNext(2)
         .expectComplete()
         .verify();
+    }
+
+    @Test
+    void testTwoMonosTimeOut() {
+        StepVerifier.create(
+                Utils.monoWithDelay(1, Duration.ofMillis(500))
+                        .timeout(Duration.ofMillis(50), Mono.just(3), scheduler)
+        )
+                .expectNext(3)
+                .expectComplete()
+                .verify();
+        StepVerifier.create(
+                Utils.monoWithDelay(1, Duration.ofMillis(500))
+                        .timeout(Duration.ofMillis(50), Mono.just(4), scheduler)
+        )
+                .expectNext(4)
+                .expectComplete()
+                .verify();
     }
 }

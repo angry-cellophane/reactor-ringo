@@ -4,10 +4,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.ParallelFlux;
 import reactor.core.scheduler.Scheduler;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -61,5 +64,28 @@ public class FluxBasicUseCasesTest {
         .expectNextSequence(List.of(1,2,3,-1,-1,-1))
         .expectComplete()
         .verify();
+    }
+
+    @Test
+    void testSubmitFluxFor5CyclesWithoutDelays() {
+        StepVerifier.create(
+                Flux.fromStream(IntStream.range(0, 1_000).boxed())
+                        .limitRate(100)
+                        .buffer(100)
+                        .delayElements(Duration.ofMillis(200))
+                        .timeout(Duration.ofMillis(300), Mono.just(Collections.emptyList()), scheduler)
+        )
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectNextMatches(l -> !l.isEmpty())
+                .expectComplete()
+                .verify();
     }
 }

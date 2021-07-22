@@ -1,0 +1,28 @@
+package org.github.ka.reactor.ringo;
+
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
+import reactor.test.StepVerifier;
+
+public class BattleField {
+
+    @Test
+    void test() {
+        Ringo.run(() -> {
+            var flux = Flux.just(1, 2, 3)
+                    .map(i -> i * 2)
+                    .publishOn(Schedulers.boundedElastic())
+                    .log("")
+                    .filter(i -> i % 2 == 0);
+
+            StepVerifier.create(flux)
+                    .expectNext(2)
+                    .expectNext(4)
+                    .expectNext(6)
+                    .expectComplete()
+                    .verify();
+            System.out.println("done");
+        });
+    }
+}

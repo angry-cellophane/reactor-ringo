@@ -17,6 +17,7 @@ ext.SLF4J_VERSION = '1.7.30'
 
 dependencies {
 	implementation "io.projectreactor:reactor-core:${REACTOR_VERSION}"
+	implementation "io.projectreactor.netty:reactor-netty:1.0.10"
 	implementation "org.slf4j:slf4j-api:${SLF4J_VERSION}"
 	testImplementation "io.projectreactor:reactor-test:${REACTOR_VERSION}"
 
